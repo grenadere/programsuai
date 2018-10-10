@@ -1,0 +1,40 @@
+#include <stdio.h> 
+#define MAXLINE 1024 
+void main() 
+{
+	FILE *fpin;   // входной файл  
+	FILE *fpout;  // выходной файл  
+	char line[MAXLINE]; // текущая строка  
+	char *ptr; 
+	char *end;
+	char *begin;
+	fopen_s(&fpin,"test.txt", "rt"); // открыть файл для чтения  
+	if( fpin == NULL )
+		return;    // ошибка при открытии файла 
+	fopen_s(&fpout,"result.txt", "wt"); // открыть файл для записи  
+	if( fpout == NULL )
+		return;    // ошибка при открытии файла 
+
+	while (!feof(fpin))// цикл до конца входного файла
+	{   
+		ptr = fgets( line, MAXLINE, fpin ); // чтение строки 
+		begin = line;
+		end = line;
+		if (ptr == NULL)
+			break; // файл исчерпан 
+		while (*ptr != '\0') // цикл до конца строки
+		{    
+			if (*ptr >= '0' && *ptr <= '9'	)	
+			{
+		char *src = ptr + 1;	// Указатель на начало удаляемого слова
+		char *dst = ptr;		// Указатель на конец удаляемого слова
+		while ((*dst++ = *src++) != '\0');	// Удаление слова
+					ptr--;		// Указатель на место удаленного слова
+			}
+			ptr++; // продвигаем указатель по строке
+		} 
+		fputs(line, fpout); // запись строки
+	} 
+	fclose(fpin); // закрыть входной файл
+	fclose( fpout ); // закрыть выходной файл
+}
