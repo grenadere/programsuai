@@ -6,8 +6,6 @@ void main()
 	FILE *fpout;  // выходной файл  
 	char line[MAXLINE]; // текущая строка  
 	char *ptr; 
-	char *end;
-	char *begin;
 	fopen_s(&fpin,"test.txt", "rt"); // открыть файл для чтения  
 	if( fpin == NULL )
 		return;    // ошибка при открытии файла 
@@ -18,8 +16,6 @@ void main()
 	while (!feof(fpin))// цикл до конца входного файла
 	{   
 		ptr = fgets( line, MAXLINE, fpin ); // чтение строки 
-		begin = line;
-		end = line;
 		if (ptr == NULL)
 			break; // файл исчерпан 
 		while (*ptr != '\0') // цикл до конца строки
