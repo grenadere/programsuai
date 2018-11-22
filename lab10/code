@@ -1,0 +1,168 @@
+#include <stdio.h> 
+#include <string.h> 
+#include <malloc.h> 
+#include <stdlib.h> 
+#pragma warning(disable : 4996)
+#define MAXLEN 1000 // максимальная длина строки 
+#define NLINES 1000  // максимальное число строк 
+void swap(char *num1, char *num2)
+{
+	char p;
+	int fl = 0;
+	while (((*(num1 - 1) != '\0') || (*(num2 - 1) != '\0')) && (fl != 1))
+	{
+		if ((*num1 == '\0') || (*num2 == '\0')) 
+			fl = 1;
+		p = *num1;
+		*num1 = *num2;
+		*num2 = p;
+		num1++;
+		num2++;
+	}
+       *num1 = *num2 = '\0';
+}
+void bubble_sort(int nlines, char *lines_ptr[]) //сортировка строк массива методом пузырька
+{
+	int k, m, flag;
+	char *ptr1, *ptr2;
+	for (k = 0; k < nlines - 1; k++)
+	{
+		for (m = 0; m < nlines - k - 1; m++)
+		{
+			flag = 0;
+			ptr1 = lines_ptr[m];
+			ptr2 = lines_ptr[m+1];
+			while (((*ptr1 != '\0') || (*ptr2 != '\0')) && (flag != 1))
+			{
+				if ((*(ptr1) == '\0') || (*(ptr2) == '\0'))
+					flag = 1;
+				if ((((('a' <= *ptr1) && ('z' >= *ptr1)) && (('a' <= *ptr2) && ('z' >= *ptr2))) || (((('A' <= *ptr1) && ('Z' >= *ptr1)) && (('A' <= *ptr2) && ('Z' >= *ptr2)))) && ((*ptr1) > *ptr2)))
+				{
+					if (*ptr1 != *ptr2)
+					{
+						if (*ptr1 > *ptr2)
+						{
+							swap(lines_ptr[m], lines_ptr[m + 1]);
+							break;
+						}
+						else
+							break;
+					}
+				}
+				if ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (('a' <= *ptr2) && ('z' >= *ptr2)))
+				{
+					if ((*ptr1 + 32) != *ptr2)
+					{
+						if ((*ptr1 + 32) > *ptr2)
+						{
+							swap(lines_ptr[m], lines_ptr[m + 1]);
+							break;
+						}
+						else
+							break;
+					}
+				}
+				if ((('a' <= *ptr1) && ('z' >= *ptr1)) && (('A' <= *ptr2) && ('Z' >= *ptr2)))
+				{
+					if ((*ptr1 - 32) != *ptr2)
+					{
+						if ((*ptr1 - 32) > *ptr2)
+						{
+							swap(lines_ptr[m], lines_ptr[m + 1]);
+							break;
+						}
+						else
+							break;
+					}
+				}
+				if (((('a' <= *ptr1) && ('z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))) || ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
+				{
+					swap(lines_ptr[m], lines_ptr[m + 1]);
+					break;
+				}
+				if (((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))) || ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
+				{
+					swap(lines_ptr[m], lines_ptr[m + 1]);
+					break;
+				}
+				if ((!(('A' <= *ptr1) && ('Z' >= *ptr1) || ('a' <= *ptr1) && ('z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
+				{
+					if (*ptr1 != *ptr2)
+					{
+						if (*ptr1 > *ptr2)
+						{
+							swap(lines_ptr[m], lines_ptr[m + 1]);
+							break;
+						}
+						else
+							break;
+					}
+				}
+				ptr1++;
+				ptr2++;
+			}
+		}
+	}
+}
+void main()
+{
+	FILE *fpin; // входной файл  
+	FILE *fpout;  // выходной файл  
+	int nlines = 0; // число строк в файле   
+	char **lines_ptr = NULL;  // указатель на динамический массив 
+	char *print;
+	int npointers;    // число указателей в динамическом массиве  
+	int i;
+	fopen_s(&fpin, "test.txt", "rt"); // открыть файл для чтения  
+	if (fpin == NULL)
+		return;    // ошибка при открытии файла 
+	fopen_s(&fpout, "result.txt", "wt"); // открыть файл для записи  
+	if (fpout == NULL)
+		return;    // ошибка при открытии файла 			  
+#if 1   // заказать динамический массив указателей 
+	lines_ptr = (char**)malloc(NLINES * sizeof(char*));
+	memset(lines_ptr, 0, NLINES * sizeof(char*));	// обнулить массив указателей  
+#else  
+	lines_ptr = (char**)calloc(NLINES, sizeof(char*));
+#endif  
+	npointers = NLINES;
+	while (!feof(fpin)) // цикл до конца входного файла  
+	{
+		char line[MAXLEN];
+		char *ptr = fgets(line, MAXLEN, fpin); // чтение строки   
+		int len;
+		if (ptr == NULL)
+			break; // файл исчерпан 
+		len = (int)strlen(line);  // определить длину строки 
+		if (nlines == npointers)	// динамический массив исчерпан 
+		{
+			npointers += NLINES;// увеличить число указателей в массиве           
+			lines_ptr = (char**)realloc(lines_ptr, npointers * sizeof(char*));   // перезаказать память для массива указателей 
+			memset(&lines_ptr[nlines], 0, NLINES * sizeof(char*));	 // обнулить новую часть массива указателе
+		}
+		lines_ptr[nlines] = (char*)malloc(len + 1);// заказать в памяти место для строки плюс один байт      
+		strcpy(lines_ptr[nlines], line); // сохранить строку в динамическом массиве 
+		nlines++;
+	}
+	bubble_sort(nlines,lines_ptr);
+	for (i = 0; i < nlines; i++)
+	{
+		int vihod = 0;
+		print = lines_ptr[i];
+		while (vihod != 1)
+		{
+			fprintf(fpout, "%c", *print);
+			print++;
+			if ((*print == '\n') || (*print == '\0'))
+				vihod = 1;
+		}
+		fprintf(fpout, "\n");
+	}
+//	for (i = 0; i < nlines; i++)// отказаться от памяти для строк  
+//		if (lines_ptr[i] != NULL)
+//			free(lines_ptr[i]);
+	if (lines_ptr != NULL)// отказаться от динамического массива указателей  
+		free(lines_ptr);
+	fclose(fpin);  // закрыть входной файл 
+	fclose(fpout); // закрыть выходной файл
+}
