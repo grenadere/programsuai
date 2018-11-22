@@ -8,18 +8,23 @@
 void swap(char *num1, char *num2)
 {
 	char p;
-	int fl = 0;
-	while (((*(num1 - 1) != '\0') || (*(num2 - 1) != '\0')) && (fl != 1))
+	int fl1 = 0, fl2 = 0;
+	while (((*(num1) != '\0') || (*(num2) != '\0')) && (fl1 != 1) || (fl2 != 1))
 	{
-		if ((*num1 == '\0') || (*num2 == '\0')) 
-			fl = 1;
+		if (*num1 == '\0')
+			fl1 = 1;
+		if (*num2 == '\0')
+			fl2 = 1;
 		p = *num1;
 		*num1 = *num2;
 		*num2 = p;
 		num1++;
 		num2++;
 	}
-       *num1 = *num2 = '\0';
+    if (fl2 != 1) 
+		*num2 = '\0';
+	 if (fl1 != 1) 
+		*num1 = '\0';
 }
 void bubble_sort(int nlines, char *lines_ptr[]) //сортировка строк массива методом пузырька
 {
@@ -75,16 +80,13 @@ void bubble_sort(int nlines, char *lines_ptr[]) //сортировка стро�
 							break;
 					}
 				}
-				if (((('a' <= *ptr1) && ('z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))) || ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
+				if (((('a' <= *ptr1) && ('z' >= *ptr1) || ('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))) || ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
 				{
 					swap(lines_ptr[m], lines_ptr[m + 1]);
 					break;
 				}
-				if (((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))) || ((('A' <= *ptr1) && ('Z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
-				{
-					swap(lines_ptr[m], lines_ptr[m + 1]);
+				if (((('a' <= *ptr2) && ('z' >= *ptr2) || ('A' <= *ptr2) && ('Z' >= *ptr2)) && (!(('A' <= *ptr1) && ('Z' >= *ptr1) || ('a' <= *ptr1) && ('z' >= *ptr1)))) || ((('A' <= *ptr2) && ('Z' >= *ptr2)) && (!(('A' <= *ptr1) && ('Z' >= *ptr1) || ('a' <= *ptr1) && ('z' >= *ptr1)))))
 					break;
-				}
 				if ((!(('A' <= *ptr1) && ('Z' >= *ptr1) || ('a' <= *ptr1) && ('z' >= *ptr1)) && (!(('A' <= *ptr2) && ('Z' >= *ptr2) || ('a' <= *ptr2) && ('z' >= *ptr2)))))
 				{
 					if (*ptr1 != *ptr2)
