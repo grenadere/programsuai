@@ -60,6 +60,8 @@ void main(void)
 					printf("%c", word[i]);
 				SetConsoleTextAttribute(hStdout, 7);
 				printf("%c", *ptr);
+				for (i = 0; i <= k; i++)
+					word[i] = NULL;
 				k = 0;
 
 			}
